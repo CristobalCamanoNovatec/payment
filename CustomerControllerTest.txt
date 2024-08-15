@@ -1,0 +1,32 @@
+
+
+    @Test
+    public void testGetCustomerController() {
+
+
+        String id = "123";
+        String token = "dummy";
+
+        String mockResponseBody = "{\"data\": {\"datosBasicos\": {\"razonSocial\": \"Test Corp\", \"numeroDoc\": \"123456\", \"codActEco\": \"A1\", \"descripcionDireccion\": \"Test Address\", \"tipoVia\": \"Street\", \"tipoViaOficinaPrincipal\": \"Main St\", \"direccionOficinaPrincipal\": \"123 Main St\", \"telefonoOficinaPrincipal\": \"123-456-7890\", \"email\": \"test@test.com\"}}}";
+
+        ResponseEntity<String> mockResponse = new ResponseEntity<>(mockResponseBody, HttpStatus.OK);
+        when(restTemplate.exchange(eq(customerApiUrl), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class))).thenReturn(mockResponse);
+
+        Map<String, String> map = new HashMap<>();
+        map.put("menssage","Prueba");
+        JSONObject result = new JSONObject(map);
+
+        String penumber="Penumber1";
+        //when(customerApi.processAndMapping(penumber)).thenReturn(result);
+        //when(customerService.processAndMapping(penumber)).thenReturn(result);
+
+        //customerService
+        customerService = new CustomerServiceImpl(customerApi);
+
+        customerController = new CustomerController(customerService);
+
+        String response = customerController.getCustomer(penumber).getBody();
+        assertTrue(response.contains("Test Corp"));
+    }
+
+

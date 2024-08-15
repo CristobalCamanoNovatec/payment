@@ -1,0 +1,16 @@
+
+@Test
+    public void testProcessAndMappingThrowExeption() {
+        String id = "123";
+        String token = "dummyToken";
+
+        String mockResponseBody = "{\"data\": {\"estado\": \"A\"}}";
+        ResponseEntity<String> mockResponse = new ResponseEntity<>(mockResponseBody, HttpStatus.OK);
+        when(restTemplate.exchange(eq(accountApiUrl), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
+                .thenThrow(new HttpStatusCodeException(HttpStatus.NO_CONTENT, "{\"errores\": [{\"mensaje\": \"Prueba Error\"}]}") {
+                });
+
+        JSONObject result = accountApiAdapterImpl.processAndMapping(id);
+
+        assertEquals("Prueba Error", result.getJSONObject("error").getString("msgError"));
+    }
